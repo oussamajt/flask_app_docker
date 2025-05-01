@@ -1,14 +1,21 @@
-# syntax=docker/dockerfile:1
-FROM ubuntu:22.04
+# Use an official Python runtime as a parent image
+FROM python:3.12-slim
 
-# install app dependencies
-RUN apt-get update && apt-get install -y python3 python3-pip
-RUN pip install flask
+# Set the working directory in the container
+WORKDIR /app
 
-# install app
-COPY hello.py /
+# Copy the current directory contents into the container at /app
+COPY . /app
 
-# final configuration
-ENV FLASK_APP=hello
-EXPOSE 8000
-CMD ["flask", "run", "--host", "0.0.0.0", "--port", "8000"]
+# Install any needed packages specified in requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Make port 5000 available to the world outside this container
+EXPOSE 5000
+
+# Define environment variable
+ENV FLASK_APP=app.py
+
+# Run app.py when the container launches
+CMD ["python", "app.py"]
+
